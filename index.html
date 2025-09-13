@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Attendance System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        header {
+            background: #4a00e0;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab-button {
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: none;
+            border: none;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .tab-button.active {
+            background: white;
+            color: #4a00e0;
+            border-bottom: 3px solid #4a00e0;
+        }
+        
+        .tab-content {
+            padding: 30px;
+        }
+        
+        .tab-pane {
+            display: none;
+        }
+        
+        .tab-pane.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #4a00e0;
+            outline: none;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            background: #4a00e0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #3575fc;
+        }
+        
+        .btn-block {
+            width: 100%;
+        }
+        
+        .instructions {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        
+        .instructions h3 {
+            color: #4a00e0;
+            margin-bottom: 15px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .setup-complete {
+            text-align: center;
+            padding: 30px;
+            background: #f0f9ff;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .setup-complete i {
+            font-size: 3rem;
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+        
+        .server-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .sheet-config {
+            background: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-book-reader"></i> College Attendance System</h1>
+            <p>Google Sheets Integrated Solution</p>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab-button active" data-tab="setup"><i class="fas fa-cog"></i> Setup</button>
+            <button class="tab-button" data-tab="mark"><i class="fas fa-check-circle"></i> Mark Attendance</button>
+            <button class="tab-button" data-tab="view"><i class="fas fa-table"></i> View Sheet</button>
+        </div>
+        
+        <div class="tab-content">
+            <!-- Setup Tab -->
+            <div class="tab-pane active" id="setup">
+                <h2>Setup Instructions</h2>
+                <p>Follow these steps to connect this form to your Google Sheet:</p>
+                
+                <div class="server-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Important:</strong> This form must be hosted on a web server (like GitHub Pages) to work with FormSubmit.
+                </div>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-list-ol"></i> Step-by-Step Guide</h3>
+                    <ol>
+                        <li>Go to <a href="https://sheets.google.com" target="_blank">sheets.google.com</a> and create a new spreadsheet</li>
+                        <li>Name the first row headers: <strong>Timestamp, RollNumber, Name, Subject, Date</strong></li>
+                        <li>Click the <strong>"Share"</strong> button and set to <strong>"Anyone with the link can edit"</strong></li>
+                        <li>Copy your spreadsheet URL and paste it in the form below</li>
+                        <li>Click <strong>"Save Configuration"</strong> to connect your sheet</li>
+                    </ol>
+                </div>
+                
+                <div class="sheet-config">
+                    <h3><i class="fas fa-info-circle"></i> FormSubmit Configuration</h3>
+                    <p>For FormSubmit to save data to your Google Sheet, you need to:</p>
+                    <ol>
+                        <li>Share your Google Sheet with <strong>formsubmit.co@gmail.com</strong> as an editor</li>
+                        <li>Rename your sheet to <strong>"FormSubmit Responses"</strong></li>
+                        <li>Wait a few minutes after submission for the data to appear</li>
+                    </ol>
+                </div>
+                
+                <form id="setup-form">
+                    <div class="form-group">
+                        <label for="sheet-url"><i class="fas fa-link"></i> Google Sheet URL</label>
+                        <input type="url" id="sheet-url" class="form-control" placeholder="https://docs.google.com/spreadsheets/d/..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-email"><i class="fas fa-envelope"></i> Your Email (for notifications)</label>
+                        <input type="email" id="admin-email" class="form-control" placeholder="your.email@example.com" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-block"><i class="fas fa-save"></i> Save Configuration</button>
+                </form>
+                
+                <div class="setup-complete" id="setup-complete" style="display: none;">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Setup Complete!</h3>
+                    <p>Your attendance system is now connected to Google Sheets.</p>
+                    <p>Switch to the "Mark Attendance" tab to test the system.</p>
+                </div>
+            </div>
+            
+            <!-- Mark Attendance Tab -->
+            <div class="tab-pane" id="mark">
+                <h2>Mark Attendance</h2>
+                <p>Fill out the form below to mark your attendance.</p>
+                
+                <div class="alert alert-success" id="success-alert">
+                    <i class="fas fa-check-circle"></i> Attendance submitted successfully!
+                </div>
+                
+                <div class="alert alert-error" id="error-alert">
+                    <i class="fas fa-exclamation-circle"></i> Please complete the setup first!
+                </div>
+                
+                <div class="server-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Note:</strong> After submitting, it may take a few minutes for data to appear in your Google Sheet.
+                </div>
+                
+                <form id="attendance-form">
+                    <div class="form-group">
+                        <label for="rollNumber"><i class="fas fa-id-card"></i> Roll Number</label>
+                        <input type="number" id="rollNumber" name="RollNumber" class="form-control" placeholder="Enter your roll number" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="name"><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="name" name="Name" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject"><i class="fas fa-book"></i> Subject</label>
+                        <select id="subject" name="Subject" class="form-control" required>
+                            <option value="">Select a subject</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Chemistry">Chemistry</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="English">English</option>
+                        </select>
+                    </div>
+                    
+                    <input type="hidden" name="Date" id="current-date">
+                    
+                    <button type="submit" class="btn btn-block"><i class="fas fa-paper-plane"></i> Submit Attendance</button>
+                </form>
+            </div>
+            
+            <!-- View Sheet Tab -->
+            <div class="tab-pane" id="view">
+                <h2>View Google Sheet</h2>
+                <p>Click the button below to open your Google Sheet with all attendance records.</p>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                    <button id="open-sheet" class="btn" style="padding: 15px 30px;">
+                        <i class="fas fa-external-link-alt"></i> Open Google Sheet
+                    </button>
+                </div>
+                
+                <div class="instructions">
+                    <h3><i class="fas fa-info-circle"></i> Instructions for Teachers</h3>
+                    <ul>
+                        <li>Click the button above to view the attendance sheet</li>
+                        <li>You can sort data by clicking on column headers</li>
+                        <li>Use Filters to view attendance by date or subject</li>
+                        <li>Data is automatically updated when students submit the form</li>
+                    </ul>
+                </div>
+                
+                <div class="server-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Troubleshooting:</strong> If data isn't appearing in your sheet:
+                    <ol>
+                        <li>Make sure you shared the sheet with <strong>formsubmit.co@gmail.com</strong></li>
+                        <li>Check that the sheet is named <strong>"FormSubmit Responses"</strong></li>
+                        <li>Wait a few minutes after form submission</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Display current date
+            const now = new Date();
+            document.getElementById('current-date').value = now.toLocaleDateString();
+            
+            // Tab functionality
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    
+                    // Update active tab button
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Update active tab pane
+                    tabPanes.forEach(pane => pane.classList.remove('active'));
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Setup form submission
+            const setupForm = document.getElementById('setup-form');
+            setupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const sheetUrl = document.getElementById('sheet-url').value;
+                const adminEmail = document.getElementById('admin-email').value;
+                
+                if (!sheetUrl || !adminEmail) {
+                    alert('Please fill all fields');
+                    return;
+                }
+                
+                // Update FormSubmit endpoint with user's email
+                const attendanceForm = document.getElementById('attendance-form');
+                attendanceForm.action = `https://formsubmit.co/${adminEmail}`;
+                attendanceForm.method = 'POST';
+                
+                // Add FormSubmit hidden fields
+                const existingHiddenInputs = attendanceForm.querySelectorAll('input[type="hidden"]');
+                existingHiddenInputs.forEach(input => {
+                    if (input.name === '_subject' || input.name === '_template' || input.name === '_next') {
+                        input.remove();
+                    }
+                });
+                
+                attendanceForm.innerHTML += `
+                    <input type="hidden" name="_subject" value="New Attendance Entry">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_next" value="#success">
+                    <input type="hidden" name="_autoresponse" value="Your attendance has been recorded successfully!">
+                `;
+                
+                // Update the Open Sheet button
+                document.getElementById('open-sheet').addEventListener('click', function() {
+                    window.open(sheetUrl, '_blank');
+                });
+                
+                // Show success message
+                document.getElementById('setup-complete').style.display = 'block';
+                
+                // Switch to Mark Attendance tab after a delay
+                setTimeout(() => {
+                    document.querySelector('[data-tab="mark"]').click();
+                }, 2000);
+            });
+            
+            // Attendance form submission
+            const attendanceForm = document.getElementById('attendance-form');
+            attendanceForm.addEventListener('submit', function(e) {
+                const rollNumber = document.getElementById('rollNumber').value;
+                const name = document.getElementById('name').value;
+                const subject = document.getElementById('subject').value;
+                
+                if (!rollNumber || !name || !subject) {
+                    e.preventDefault();
+                    document.getElementById('error-alert').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('error-alert').style.display = 'none';
+                    }, 3000);
+                    return;
+                }
+                
+                // Show success message after submission
+                setTimeout(() => {
+                    document.getElementById('success-alert').style.display = 'block';
+                    attendanceForm.reset();
+                    
+                    setTimeout(() => {
+                        document.getElementById('success-alert').style.display = 'none';
+                    }, 5000);
+                }, 1000);
+            });
+            
+            // Open sheet button
+            document.getElementById('open-sheet').addEventListener('click', function() {
+                const sheetUrl = document.getElementById('sheet-url').value;
+                if (sheetUrl) {
+                    window.open(sheetUrl, '_blank');
+                } else {
+                    alert('Please configure your Google Sheet URL in the Setup tab first.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
